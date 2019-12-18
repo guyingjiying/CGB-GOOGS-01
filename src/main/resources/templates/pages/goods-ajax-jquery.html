@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+   <h1>The Goods Page</h1>
+   <h2>Show Goods Data By JQuery With Ajax</h2>
+   <table>
+      <thead>
+      <tr>
+         <th>id</th>
+         <th>name</th>
+         <th>remark</th>
+         <th>createdTime</th>
+      </tr>
+      </thead>
+      <tbody>
+         <tr><td colspan="4">Data is Loading</td></tr>
+      </tbody>
+   </table>
+   <script type="text/javascript" 
+           src="/jquery/dist/jquery.min.js"></script>
+   <script type="text/javascript">
+       $(function(){
+    	   console.log("test jquery")
+       })
+       var url="doFindObjects";
+       var params={"page":1},
+       //jquery中的ajax函数应用
+       $.ajax({
+    	   url:url,
+    	   type:"GET",
+    	   data:params,
+    	   success:function(result){
+    		   console.log("ajax",result);
+    		   //将result中的内容更新页面(自己实现)?
+    	   }
+       });
+       //jquery中getJSON函数应用(对ajax操作做了封装)
+       $.getJSON(url,params,function(result){
+    	   console.log("getJSON",result)
+       })
+       //jquery中post函数应用
+       $.post(url,params,function(result){
+    	   console.log("post",result)
+       });//借助XMLHttpRequest对象发异步请求
+       //.....
+   </script>
+</body>
+</html>
+
+
+
+
+

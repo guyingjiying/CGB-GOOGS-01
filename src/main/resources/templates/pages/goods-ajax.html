@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+   <h1>The Goods Page</h1>
+   <h2>Show Goods Data By Ajax Async Request</h2>
+   <table>
+      <thead>
+      <tr>
+         <th>id</th>
+         <th>name</th>
+         <th>remark</th>
+         <th>createdTime</th>
+      </tr>
+      </thead>
+      <tbody id="tbodyId">
+        <tr>
+          <td colspan="4">data is loading ....</td>
+        </tr>
+      </tbody>
+   </table>
+   <script type="text/javascript">
+
+        function doAjaxGet(){
+          //1.创建xhr对象(应用ajax的一个入口对象)
+          var xhr=new XMLHttpRequest();
+          console.log("xhr",xhr);
+          //2.注册xhr状态监听(监听与服务器端的通讯状态)
+          xhr.onreadystatechange=function(){
+        	  //readyState==4表示与服务端的通讯结束
+        	  //status==200表示服务端的响应是OK的
+        	 if(xhr.readyState==4&&xhr.status==200){
+        		var jsonResult=JSON.parse(xhr.responseText);
+        		//处理响应结果
+        		//doHandleResponseResult01(jsonResult);
+        		doHandleResponseResult02(jsonResult);
+        	 } 
+          }
+          //3.打开一个与服务端的连接
+          var url="doFindObjects?page=10"
+          xhr.open("GET",url,true);//true表示异步
+          //4.发送请求
+          xhr.send(null);//get请求,send方法内部不传数据
+        }
+        function doAjaxPost(){
+          //1.创建xhr对象(应用ajax的一个入口对象)
+          var xhr=new XMLHttpRequest();
+          //2.注册xhr状态监听(监听与服务器端的通讯状态)
+          xhr.onreadystatechange=function(){
+        	  //readyState==4表示与服务端的通讯结束
+        	  //status==200表示服务端的响应是OK的
+        	 if(xhr.readyState==4&&xhr.status==200){
+        		var jsonResult=JSON.parse(xhr.responseText);
+        		//处理响应结果
+        		//doHandleResponseResult01(jsonResult);
+        		doHandleResponseResult02(jsonResult);
+        	 } 
+          }
+          //3.打开一个与服务端的连接
+          var url="doFindObjects"
+          var params="page=1";
+          xhr.open("POST",url,true);//true表示异步
+          xhr.setRequestHeader("Content-Type",
+          "application/x-www-form-urlencoded");
+          //4.发送请求
+          xhr.send(params);//post请求send方法传参数
+        }
+        //处理响应结果(借助es5的规范)
+        function doHandleResponseResult01(result){
+        	//1.获取tbody对象并清空原有内容
+        	var tBody=document.getElementById("tbodyId");
+        	tBody.innerHTML="";
+        	//2.迭代结果集并将记录追加到tbody.
+        	for(var i=0;i<result.length;i++){
+        		//2.1创建tr元素对象
+        		var tr=document.createElement("tr");
+        		//2.2创建tr中的td元素
+        		var td=document.createElement("td");          
+        		td.innerText=result[i].id;
+        		tr.appendChild(td);
+        		
+        		td=document.createElement("td");
+        		td.innerText=result[i].name;
+        		tr.appendChild(td);
+        		
+        		td=document.createElement("td");
+        		td.innerText=result[i].remark;
+        		tr.appendChild(td);
+        		td=document.createElement("td");
+        		td.innerText=result[i].createdTime;       
+        		tr.appendChild(td);
+        		//2.3将tr追加tbody
+        		tBody.appendChild(tr);
+        	}
+        }
+        //?自己尝试使用ES6的规范处理响应结果
+        function doHandleResponseResult02(result){
+        	var trs="";
+        	result.forEach((item)=>{//ES6
+        		trs+="<tr>"+
+        		"<td>"+item.id+"</td>"+
+        		 "<td>"+item.name+"</td>"+
+        		 "<td>"+item.remark+"</td>"+
+        		 "<td>"+new Date(item.createdTime).toLocaleString()+"</td>"+
+        		"</tr>"
+        	});
+        	$("tbodyId").innerHTML=trs;
+        }
+        function $(id){
+        	return document.getElementById(id);
+        }
+        doAjaxGet();
+        //doAjaxPost();
+   </script>
+</body>
+</html>
+
+
+
+
+
